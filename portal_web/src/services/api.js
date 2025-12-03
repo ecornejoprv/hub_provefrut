@@ -1,25 +1,23 @@
 import axios from 'axios';
 
 // 1. Configuración Base
-// Apuntamos al puerto 8080 donde corre tu Django
 const api = axios.create({
-    //baseURL: 'http://127.0.0.1:8080/api/',
-    //baseURL: 'http://172.20.0.101:8080/api/',
-    baseURL: '/api/',
+    baseURL: '/api/', 
     headers: {
         'Content-Type': 'application/json',
     }
 });
 
-// 2. Interceptor de Peticiones (El que pega el token)
+// =================================================================
+// INTERCEPTOR DE SOLICITUD (Salida) -> Inyecta el Token
+// =================================================================
 api.interceptors.request.use(
     (config) => {
-        // Buscamos si existe un "Pasaporte Universal" guardado
-        const token = localStorage.getItem('access_token');
+        const storedToken = localStorage.getItem('access_token');
         
-        // Si existe, lo pegamos en la cabecera Authorization
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+        // Si hay token y la petición no tiene uno manual, lo inyectamos
+        if (storedToken && !config.headers['Authorization']) {
+            config.headers['Authorization'] = `Bearer ${storedToken}`;
         }
         return config;
     },
@@ -28,24 +26,71 @@ api.interceptors.request.use(
     }
 );
 
-// 3. Funciones de Autenticación (Los endpoints que creamos en Django)
+// =================================================================
+// INTERCEPTOR DE RESPUESTA (Entrada) -> Maneja Errores 401
+// =================================================================
+api.interceptors.response.use(
+    (response) => {
+        // Si todo sale bien (Status 200-299), pasamos la respuesta limpia
+        return response;
+    },
+    (error) => {
+        // Si el servidor responde con error
+        if (error.response && error.response.status === 401) {
+            console.warn("⚠️ Acceso Denegado o Sesión Expirada (401)");
+
+            // EVITAR BUCLE INFINITO:
+            // Si ya estamos en el login, no intentamos redirigir de nuevo
+            if (!window.location.pathname.includes('/login')) {
+                // 1. Limpiamos basura
+                localStorage.clear();
+                
+                // 2. Redirección forzosa al Login
+                // Usamos window.location en lugar de navigate para asegurar un reset total de memoria
+                window.location.href = '/login';
+            }
+        }
+        
+        // Rechazamos la promesa para que el componente sepa que hubo error (y muestre alertas si quiere)
+        return Promise.reject(error);
+    }
+);
+
+// =================================================================
+// SERVICIOS DE AUTENTICACIÓN
+// =================================================================
 export const authService = {
-    // Paso 1: Login inicial (Usuario/Clave) -> Devuelve Token temporal + Empresas
     login: async (username, password) => {
         const response = await api.post('login/', { username, password });
         return response.data;
     },
 
-    // Paso 2: Selección de Empresa -> Devuelve Pasaporte Universal
     selectEmpresa: async (empresa_id, token_temporal) => {
-        // Aquí necesitamos enviar el token temporal explícitamente
-        // porque aún no lo hemos guardado como "oficial"
+        if (!token_temporal) throw new Error("Token temporal perdido");
+        
         const response = await api.post('select-empresa/', 
             { empresa_id }, 
-            { 
-                headers: { Authorization: `Bearer ${token_temporal}` } 
-            }
+            { headers: { 'Authorization': `Bearer ${token_temporal}` } }
         );
+        return response.data;
+    },
+
+    requestPasswordReset: async (email) => {
+        const response = await api.post('password-reset/', { email });
+        return response.data;
+    },
+
+    confirmPasswordReset: async (uidb64, token, password) => {
+        const response = await api.post('password-reset-confirm/', {
+            uidb64,
+            token,
+            password
+        });
+        return response.data;
+    },
+
+    cambiarPasswordObligatorio: async (password) => {
+        const response = await api.post('cambiar-password-obligatorio/', { password });
         return response.data;
     }
 };

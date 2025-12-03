@@ -1,0 +1,331 @@
+/* =========================================
+   LOGIN ENTERPRISE - DISEÑO PREMIUM
+   ========================================= */
+
+/* Reset básico para asegurar full screen */
+.login-layout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #ffffff;
+}
+
+/* --- SECCIÓN IZQUIERDA (VISUAL) --- */
+.login-visual-section {
+    flex: 1.3; /* Un poco más ancha que el form */
+    position: relative;
+    background-image: url('../assets/images/login-bg.png'); /* Tu foto de campo */
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: none; /* Mobile first: oculto en celus */
+}
+
+@media (min-width: 960px) {
+    .login-visual-section { display: block; }
+}
+
+/* El Overlay es clave: Oscuro y elegante */
+.visual-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Degradado verde corporativo profundo, semi-transparente */
+    background: linear-gradient(180deg, rgba(20, 50, 25, 0.85) 0%, rgba(10, 30, 15, 0.95) 100%);
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5rem;
+    color: white;
+}
+
+.visual-content {
+    margin-top: auto; /* Empuja hacia el centro verticalmente */
+    margin-bottom: auto;
+}
+
+.visual-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    opacity: 0.8;
+    display: block;
+    margin-bottom: 1rem;
+    color: #a8e6cf; /* Un verde menta muy suave para contraste */
+}
+
+.visual-title {
+    font-size: 3.5rem; /* Grande pero fino */
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 1.5rem 0;
+    letter-spacing: -1px;
+}
+
+.visual-divider {
+    width: 60px;
+    height: 4px;
+    background: #78b21f; /* Verde acento Provefrut */
+    margin-bottom: 1.5rem;
+    border-radius: 2px;
+}
+
+.visual-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    max-width: 500px;
+    font-weight: 300;
+}
+
+/* Footer con logos blancos */
+.visual-footer {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 2rem;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.logos-group-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 50px; /* Controlamos la altura para que se vea elegante */
+    object-fit: contain;
+    opacity: 0.9; /* Sutil transparencia para que se fusione */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+
+/* --- SECCIÓN DERECHA (FORMULARIO) --- */
+.login-form-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #ffffff;
+    position: relative;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 380px; /* Ancho óptimo de lectura */
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.form-logo-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+    object-fit: contain;
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    color: #111827; /* Casi negro */
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.form-header p {
+    color: #6b7280; /* Gris medio */
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Alertas */
+.login-alert {
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    color: #991b1b;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alert-icon {
+    font-style: normal;
+    font-weight: bold;
+    background: #ef4444;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* Inputs Modernos */
+.input-group {
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.4rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #1f2937;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f9fafb;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    outline: none;
+    background: #fff;
+    border-color: #285d2f; /* Verde Corporativo */
+    box-shadow: 0 0 0 4px rgba(40, 93, 47, 0.1);
+}
+
+.input-group input::placeholder {
+    color: #9ca3af;
+}
+
+/* Enlaces */
+.form-extras {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.link-reset {
+    font-size: 0.85rem;
+    color: #4b5563;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.link-reset:hover {
+    color: #285d2f;
+    text-decoration: underline;
+}
+
+/* Botón Principal */
+.btn-submit {
+    width: 100%;
+    padding: 0.875rem;
+    background-color: #285d2f; /* Verde Corporativo */
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: #1e4624;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 93, 47, 0.25);
+}
+
+.btn-submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: #6b7280;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Footer solo móvil */
+.form-footer-mobile {
+    margin-top: 3rem;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    display: block;
+}
+
+@media (min-width: 960px) {
+    .form-footer-mobile { display: none; }
+}
+
+/* --- Wrapper para input con icono --- */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* El input debe tener espacio a la derecha para que el texto no toque el ojo */
+.password-wrapper input {
+    padding-right: 45px; 
+}
+
+.btn-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b; /* Gris sutil */
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s;
+}
+
+.btn-eye:hover {
+    color: #285d2f; /* Verde al pasar el mouse */
+    background-color: rgba(0,0,0,0.05);
+}
+
+.btn-eye svg {
+    width: 20px;
+    height: 20px;
+}

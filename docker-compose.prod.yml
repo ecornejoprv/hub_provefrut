@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # --- BACKEND (Django API) ---
+  backend:
+    container_name: hub_backend_prod
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env  # Lee tus claves reales
+    networks:
+      - hub_net
+
+  # --- FRONTEND (React + Nginx) ---
+  frontend:
+    container_name: hub_frontend_prod
+    build: 
+      context: ./portal_web
+      dockerfile: Dockerfile
+      # Pasamos las variables para que React sepa a dónde apuntar los botones
+      args:
+        - VITE_URL_COMPRAS=${VITE_URL_COMPRAS}
+        - VITE_URL_CHATBOT=${VITE_URL_CHATBOT}
+    restart: always
+    ports:
+      - "8080:80"  # Tu PC (8080) -> Nginx (80)
+    depends_on:
+      - backend
+    env_file:
+      - ./portal_web/.env # Lee las URLs de los otros sistemas
+    networks:
+      - hub_net
+
+networks:
+  hub_net:
+    driver: bridge
