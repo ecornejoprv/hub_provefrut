@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     env_file:
-      - .env  # Lee tus claves reales
+      - .env  
     networks:
       - hub_net
 
@@ -17,7 +17,7 @@ services:
   frontend:
     container_name: hub_frontend_prod
     build: 
-      context: ./portal_web
+      context: ./portal_webd
       dockerfile: Dockerfile
       # Pasamos las variables para que React sepa a dónde apuntar los botones
       args:
@@ -25,7 +25,7 @@ services:
         - VITE_URL_CHATBOT=${VITE_URL_CHATBOT}
     restart: always
     ports:
-      - "8080:80"  # Tu PC (8080) -> Nginx (80)
+      - "9000:80" # Mapea el puerto 80 del contenedor al puerto 9000 del host
     depends_on:
       - backend
     env_file:

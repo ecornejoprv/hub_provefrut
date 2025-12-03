@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { authService } from '../services/api';
-import '../styles/DashboardNew.css'; // CSS Nuevo
+import '../styles/DashboardNew.css';
 
 const DashboardPage = () => {
     const [user, setUser] = useState(null);
@@ -58,7 +58,7 @@ const DashboardPage = () => {
     // Helper para botones
     const lanzarApp = (url) => {
         const token = localStorage.getItem('access_token');
-        window.location.href = `${url}/sso-login#token=${token}`;
+        window.open(`${url}/sso-login#token=${token}`, '_blank', 'noopener,noreferrer');
     };
 
     if (!user) return null;
@@ -106,35 +106,46 @@ const DashboardPage = () => {
                 </div>
 
                 <div className="apps-grid">
-                    {/* APP CARD: COMPRAS */}
-                    <AppCard 
-                        title="Gestión de Compras"
-                        desc="Requisiciones, órdenes y proveedores."
-                        icon="🛒"
-                        color={themeColors[user.empresa_codigo]}
-                        active={user.permisos?.includes('core.compras_acceso')}
-                        onClick={() => lanzarApp(import.meta.env.VITE_URL_COMPRAS)}
-                    />
+                    {/* CONDICIÓN LÓGICA:
+                       Si tiene permiso && Muestra la tarjeta.
+                       Si no tiene permiso, no muestra NADA.
+                    */}
 
-                    {/* APP CARD: CHATBOT */}
-                    <AppCard 
-                        title="Asistente IA"
-                        desc="Consultas de stock y reportes inteligentes."
-                        icon="🤖"
-                        color="#6366f1" // Color especial para el bot
-                        active={user.permisos?.includes('core.chatbot_acceso')}
-                        onClick={() => lanzarApp(import.meta.env.VITE_URL_CHATBOT)}
-                    />
+                    {/* 1. COMPRAS */}
+                    {user.permisos?.includes('core.compras_acceso') && (
+                        <AppCard 
+                            title="Gestión de Compras"
+                            desc="Requisiciones, órdenes y proveedores."
+                            icon="🛒"
+                            color={themeColors[user.empresa_codigo]}
+                            active={true} // Siempre true porque si entra aquí, tiene permiso
+                            onClick={() => lanzarApp(import.meta.env.VITE_URL_COMPRAS)}
+                        />
+                    )}
 
-                    {/* APP CARD: INVENTARIO */}
-                    <AppCard 
-                        title="Inventario y Bodega"
-                        desc="Control de stock y movimientos."
-                        icon="📦"
-                        color="#f59e0b"
-                        active={user.permisos?.includes('core.inventario_acceso')}
-                        onClick={() => alert("Próximamente")}
-                    />
+                    {/* 2. CHATBOT */}
+                    {user.permisos?.includes('core.chatbot_acceso') && (
+                        <AppCard 
+                            title="Chatbot de Ayuda"
+                            desc="Asistente de Políticas y Preguntas Frecuentes (FAQ)"
+                            icon="🤖"
+                            color="#6366f1"
+                            active={true}
+                            onClick={() => lanzarApp(import.meta.env.VITE_URL_CHATBOT)}
+                        />
+                    )}
+
+                    {/* 3. INVENTARIO */}
+                    {user.permisos?.includes('core.inventario_acceso') && (
+                        <AppCard 
+                            title="Inventario y Bodega"
+                            desc="Control de stock y movimientos."
+                            icon="📦"
+                            color="#f59e0b"
+                            active={true}
+                            onClick={() => alert("Próximamente")}
+                        />
+                    )}
                 </div>
             </main>
         </div>

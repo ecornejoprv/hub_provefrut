@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { authService } from '../services/api';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import '../styles/LoginNew.css';
-
-// Importamos imágenes
 import logosWhite from '../assets/images/logos-grupo-white.png'; 
-import isotipoColor from '../assets/images/isotipoPV.png'; // Usamos este pequeño para el header del form si quieres
+import isotipoColor from '../assets/images/isotipoPV.png';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -15,15 +13,21 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [navigate]);
+
     const [searchParams] = useSearchParams();
 
-    // ... (Tu useEffect del logout sigue igual) ...
     useEffect(() => {
         if (searchParams.get('action') === 'logout') localStorage.clear();
     }, [searchParams]);
 
     const handleLogin = async (e) => {
-        // ... (Tu lógica de login sigue EXACTAMENTE IGUAL) ...
         e.preventDefault();
         setError('');
         setIsLoading(true);
@@ -80,8 +84,7 @@ const LoginPage = () => {
             {/* DERECHA: FORMULARIO */}
             <div className="login-form-section">
                 <div className="form-container">
-                    <div className="form-header">
-                        {/* Isotipo sutil arriba del form */}
+                    <div className="form-header">                        
                         <img src={isotipoColor} alt="Icono" className="form-logo-icon" /> 
                         <h2>Iniciar Sesión</h2>
                         <p>Ingrese sus credenciales para acceder.</p>
