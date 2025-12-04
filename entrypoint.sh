@@ -16,4 +16,4 @@ python manage.py collectstatic --noinput
 
 # 3. Iniciar Servidor (Gunicorn)
 echo "🔥 Iniciando Gunicorn en puerto 8000..."
-exec gunicorn hub_core.wsgi:application --bind 0.0.0.0:8000
+exec python3 -m gunicorn hub_core.wsgi:application --bind 0.0.0.0:8000
