@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # --- BACKEND (Django API) ---
   backend:
@@ -17,7 +15,7 @@ services:
   frontend:
     container_name: hub_frontend_prod
     build: 
-      context: ./portal_webd
+      context: ./portal_web
       dockerfile: Dockerfile
       # Pasamos las variables para que React sepa a dónde apuntar los botones
       args:
@@ -28,8 +26,6 @@ services:
       - "9000:80" # Mapea el puerto 80 del contenedor al puerto 9000 del host
     depends_on:
       - backend
-    env_file:
-      - ./portal_web/.env # Lee las URLs de los otros sistemas
     networks:
       - hub_net
 
