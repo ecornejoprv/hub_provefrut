@@ -7,12 +7,12 @@ echo "🚀 [BACKEND] Iniciando Entrypoint..."
 
 # 1. Migraciones (Base de datos)
 echo "📦 Aplicando migraciones a la Base de Datos..."
-python manage.py migrate
+python3 manage.py migrate
 
 # 2. Estáticos (Whitenoise)
 echo "🎨 Recolectando archivos estáticos (CSS/JS)..."
 # Esto generará la carpeta /app/static dentro del contenedor
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 # 3. Iniciar Servidor (Gunicorn)
 echo "🔥 Iniciando Gunicorn en puerto 8000..."
