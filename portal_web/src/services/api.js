@@ -1,8 +1,18 @@
 import axios from 'axios';
 
-// 1. Configuración Base
+// =================================================================
+// 0. CONFIGURACIÓN DINÁMICA DE URL
+// =================================================================
+// ESTRATEGIA:
+// 1. En Producción (Amplify): Usará la variable VITE_API_URL que configuraremos en la consola.
+// 2. En Local: Usará '/api/' para que el Proxy de Vite (vite.config.js) maneje la redirección a tu backend local.
+const baseURL = import.meta.env.VITE_API_URL || '/api/';
+
+console.log("🚀 Conectando a API en:", baseURL); // Log para depuración en consola del navegador
+
+// 1. Configuración Base de Axios
 const api = axios.create({
-    baseURL: '/api/', 
+    baseURL: baseURL, 
     headers: {
         'Content-Type': 'application/json',
     }
@@ -31,27 +41,19 @@ api.interceptors.request.use(
 // =================================================================
 api.interceptors.response.use(
     (response) => {
-        // Si todo sale bien (Status 200-299), pasamos la respuesta limpia
         return response;
     },
     (error) => {
-        // Si el servidor responde con error
+        // Si el servidor responde con error 401 (No autorizado)
         if (error.response && error.response.status === 401) {
             console.warn("⚠️ Acceso Denegado o Sesión Expirada (401)");
 
-            // EVITAR BUCLE INFINITO:
-            // Si ya estamos en el login, no intentamos redirigir de nuevo
+            // Evitar bucle infinito si ya estamos en login
             if (!window.location.pathname.includes('/login')) {
-                // 1. Limpiamos basura
                 localStorage.clear();
-                
-                // 2. Redirección forzosa al Login
-                // Usamos window.location en lugar de navigate para asegurar un reset total de memoria
                 window.location.href = '/login';
             }
         }
-        
-        // Rechazamos la promesa para que el componente sepa que hubo error (y muestre alertas si quiere)
         return Promise.reject(error);
     }
 );
