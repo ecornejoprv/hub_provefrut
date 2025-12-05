@@ -56,10 +56,24 @@ const DashboardPage = () => {
     };
 
     // Helper para botones
-    const lanzarApp = (url) => {
-        const token = localStorage.getItem('access_token');
-        window.open(`${url}/sso-login#token=${token}`, '_blank', 'noopener,noreferrer');
-    };
+    const lanzarApp = (baseUrl) => {
+    const token = localStorage.getItem('access_token');
+    
+    // 1. Defensa: Si la variable de entorno viene vacía, no hagas nada (evita abrir 'undefined/...')
+    if (!baseUrl) {
+        console.error("URL de la aplicación no definida");
+        return;
+    }
+
+    // 2. Normalización: Elimina la barra final (/) si existe para evitar dobles barras (//)
+    const cleanUrl = baseUrl.replace(/\/$/, '');
+
+    // 3. Construcción: Asegura el protocolo. Si tu variable .env NO tiene https, esto lo arregla en código.
+    const finalUrl = cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`;
+
+    // 4. Ejecución
+    window.open(`${finalUrl}/sso-login/#token=${token}`, '_blank', 'noopener,noreferrer');
+};
 
     if (!user) return null;
 
